@@ -1,10 +1,9 @@
 NAME = libftprintf.a
 
 SOURCES = ft_printf.c\
-ft_putchar_fd.c\
-ft_putendl_fd.c\
-ft_putnbr_fd.c\
-ft_putstr_fd.c
+ft_printf_util.c
+
+FLAG = -Wall -Wextra -Werror
 
 OBJ = $(SOURCES:.c=.o)
 
@@ -22,7 +21,7 @@ fclean: clean
 re: fclean all
 
 o: re
-	@cc main.c libftprintf.a -o output
+	@cc $(FLAG) main.c libftprintf.a -o output
 	@./output | cat -e
 	@rm -rf output
 	@rm -rf $(NAME) $(OBJ)

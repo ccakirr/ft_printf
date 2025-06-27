@@ -19,7 +19,8 @@
 
 void	ft_putstr_fd(char *str, int fd);
 void	ft_putnbr_fd(int n, int fd);
-void	ft_putendl_fd(char *s, int fd);
 void	ft_putchar_fd(unsigned char c, int fd);
-int	ft_printf(const char *format, ...);
+int		ft_printf(const char *format, ...);
+char	*lower_hexa_printer(unsigned int n);
+char	*higher_hexa_printer(int n);
 #endif
