@@ -10,17 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFTPRINTF_H
-# define LIBFTPRINTF_H
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 # include <stdarg.h>
 # include <stddef.h>
 # include <unistd.h>
 # include <stdlib.h>
 
-void	ft_putstr_fd(char *str, int fd);
-void	ft_putnbr_fd(int n, int fd);
-void	ft_putchar_fd(unsigned char c, int fd);
+int		ft_putstr_fd(char *str, int fd);
+int		ft_putnbr_fd(int n, int fd);
+int		ft_putchar_fd(unsigned char c, int fd);
 int		ft_printf(const char *format, ...);
-char	*lower_hexa_printer(unsigned int n);
-char	*higher_hexa_printer(int n);
+int		lower_hexa_printer(unsigned long long n);
+int		higher_hexa_printer(unsigned long long n);
+int		ft_strlen(char *s);
 #endif

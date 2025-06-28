@@ -10,89 +10,85 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
-static void	ft_putnbru_fd(int n, int fd)
+int	ft_putnbru_fd(unsigned int n, int fd)
 {
-	unsigned long	nbr;
+	int		count;
 	char	c;
 
-	nbr = n;
-	if (nbr >= 10)
-		ft_putnbr_fd (nbr / 10, fd);
-	c = (nbr % 10) + '0';
-	write (fd, &c, 1);
+	count = 0;
+	if (n >= 10)
+		count += ft_putnbru_fd(n / 10, fd);
+	c = (n % 10) + '0';
+	write(fd, &c, 1);
+	count++;
+	return (count);
 }
 
-static char	*putptr(unsigned int	ptr)
+int	putptr(unsigned long long ptr)
 {
-	char			*res;
-	unsigned int	tmp;
-	int				size;
-	char			*chared;
-	int				i;
-	int				j;
+	int	count;
 
-	tmp = ptr;
-	size = 0;
-	i = 0;
-	j = 2;
-	while(tmp)
+	count = 0;
+	if (ptr == 0)
+		count += ft_putstr_fd("(nil)", 1);
+	else
 	{
-		tmp = tmp / 10;
-		size++;
+		count += ft_putstr_fd("0x", 1);
+		count += lower_hexa_printer(ptr);
 	}
-	res = malloc(sizeof(char) * (size + 2));
-	res[0] = '0';
-	res[1] = 'x';
-	chared = lower_hexa_printer(ptr);
-	while(chared[++i])
-	{
-		res[j] = chared[i];
-		j++;
-	}
-	return (res);
+	return (count);
 }
 
-static void	formatter(char type, va_list args)
+static int	formatter(char type, va_list args)
 {
+	int	returnval;
+
 	if (type == 'c')
-		ft_putchar_fd((char)va_arg(args, int), 1);
+		returnval = ft_putchar_fd((char)va_arg(args, int), 1);
 	else if (type == 'd')
-		ft_putnbr_fd(va_arg(args, int), 1);
+		returnval = ft_putnbr_fd(va_arg(args, int), 1);
 	else if (type == 's')
-		ft_putstr_fd(va_arg(args, char *), 1);
+		returnval = ft_putstr_fd(va_arg(args, char *), 1);
 	else if (type == 'i')
-		ft_putnbr_fd(va_arg(args, int), 1);
+		returnval = ft_putnbr_fd(va_arg(args, int), 1);
 	else if (type == 'u')
-		ft_putnbru_fd(va_arg(args, unsigned int), 1);
+		returnval = ft_putnbru_fd(va_arg(args, int), 1);
 	else if (type == '%')
-		ft_putchar_fd('%', 1);
+		returnval = ft_putchar_fd('%', 1);
 	else if (type == 'x')
-		ft_putstr_fd(lower_hexa_printer(va_arg(args, unsigned int)), 1);
+		returnval = lower_hexa_printer(va_arg(args, unsigned int));
 	else if (type == 'X')
-		ft_putstr_fd(higher_hexa_printer(va_arg(args, unsigned int)), 1);
+		returnval = higher_hexa_printer(va_arg(args, unsigned int));
 	else if (type == 'p')
-		ft_putstr_fd(lower_hexa_printer(va_arg(args, void *)), 1);
+		returnval = putptr((unsigned long long)va_arg(args, void *));
+	return (returnval);
 }
 
 int	ft_printf(const char *format, ...)
 {
-	int	i;
+	int		i;
 	va_list	args;
+	int		size;
+	int		retva;
 
 	i = 0;
+	size = 0;
 	va_start(args, format);
-	while(format[i])
+	while (format[i])
 	{
-		if(format[i] == '%')
+		if (format[i] == '%')
 		{
-			formatter(format[i + 1], args);
+			retva = formatter(format[i + 1], args);
 			i = i + 2;
-			continue;
+			size += retva;
+			continue ;
 		}
 		ft_putchar_fd(format[i], 1);
 		i++;
+		size++;
 	}
 	va_end(args);
+	return (size);
 }

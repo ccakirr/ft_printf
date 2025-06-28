@@ -10,92 +10,93 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
-void	ft_putchar_fd(unsigned char c, int fd)
+int	ft_putchar_fd(unsigned char c, int fd)
 {
 	write (fd, &c, 1);
+	return (1);
 }
 
-void	ft_putnbr_fd(int n, int fd)
+int	ft_putnbr_fd(int n, int fd)
 {
 	long	nbr;
 	char	c;
+	int		count;
 
 	nbr = n;
-	if (n < 0)
+	count = 0;
+	if (nbr < 0)
 	{
-		write (fd, "-", 1);
-		nbr = nbr * -1;
+		write(fd, "-", 1);
+		count++;
+		nbr *= -1;
 	}
 	if (nbr >= 10)
-		ft_putnbr_fd (nbr / 10, fd);
+		count += ft_putnbr_fd(nbr / 10, fd);
 	c = (nbr % 10) + '0';
-	write (fd, &c, 1);
+	write(fd, &c, 1);
+	return (count + 1);
 }
 
-void	ft_putstr_fd(char *str, int fd)
+int	ft_putstr_fd(char *str, int fd)
 {
 	int	i;
 
 	i = 0;
+	if (!str)
+	{
+		i += ft_putstr_fd("(null)", 1);
+		return (i);
+	}
 	while (str[i])
 	{
-
 		write (fd, &str[i], 1);
 		i++;
 	}
+	return (i);
 }
-char	*lower_hexa_printer(unsigned int n)
-{
-	char		*res;
-	char		*hex;
-	int			len;
-	unsigned int tmp;
 
-	tmp = n;
-	len = 0;
+int	lower_hexa_printer(unsigned long long n)
+{
+	char	*hex;
+	int		i;
+	char	buffer[32];
+	int		j;
+
 	hex = "0123456789abcdef";
-	while (tmp)
-	{
-		tmp /= 16;
-		len++;
-	}
-	res = malloc(len + 1);
-	if (!res)
-		return (NULL);
-	res[len] = '\0';
+	if (n == 0)
+		return (ft_putchar_fd('0', 1));
+	i = 0;
 	while (n)
 	{
-		res[--len] = hex[n % 16];
+		buffer[i++] = hex[n % 16];
 		n /= 16;
 	}
-	return (res);
+	j = i;
+	while (j--)
+		ft_putchar_fd(buffer[j], 1);
+	return (i);
 }
 
-char	*higher_hexa_printer(int n)
+int	higher_hexa_printer(unsigned long long n)
 {
-	char		*res;
-	char		*hex;
-	int			len;
-	unsigned int tmp;
+	char	*hex;
+	int		i;
+	char	buffer[32];
+	int		j;
 
-	tmp = n;
 	hex = "0123456789ABCDEF";
-	len = 0;
-	while (tmp)
-	{
-		tmp /= 16;
-		len++;
-	}
-	res = malloc(len + 1);
-	if (!res)
-		return (NULL);
-	res[len] = '\0';
+	if (n == 0)
+		return (ft_putchar_fd('0', 1));
+	i = 0;
 	while (n)
 	{
-		res[--len] = hex[n % 16];
+		buffer[i++] = hex[n % 16];
 		n /= 16;
 	}
-	return (res);
+	j = i;
+	while (j--)
+		ft_putchar_fd(buffer[j], 1);
+	return (i);
 }

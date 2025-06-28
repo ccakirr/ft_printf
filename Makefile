@@ -1,4 +1,4 @@
-NAME = libftprintf.a
+NAME = ft_printf.a
 
 SOURCES = ft_printf.c\
 ft_printf_util.c
@@ -21,7 +21,7 @@ fclean: clean
 re: fclean all
 
 o: re
-	@cc $(FLAG) main.c libftprintf.a -o output
+	@cc $(FLAG) main.c ft_printf.a -o output
 	@./output | cat -e
 	@rm -rf output
 	@rm -rf $(NAME) $(OBJ)
