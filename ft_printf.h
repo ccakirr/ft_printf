@@ -23,5 +23,4 @@ int		ft_putchar_fd(unsigned char c, int fd);
 int		ft_printf(const char *format, ...);
 int		lower_hexa_printer(unsigned long long n);
 int		higher_hexa_printer(unsigned long long n);
-int		ft_strlen(char *s);
 #endif
