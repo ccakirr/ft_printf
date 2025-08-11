@@ -41,30 +41,35 @@ int	putptr(unsigned long long ptr)
 	return (count);
 }
 
-static int	formatter(char type, va_list args)
+static int is_format(char type)
 {
-	int	returnval;
-
-	if (type == 'c')
-		returnval = ft_putchar_fd((char)va_arg(args, int), 1);
-	else if (type == 'd')
-		returnval = ft_putnbr_fd(va_arg(args, int), 1);
-	else if (type == 's')
-		returnval = ft_putstr_fd(va_arg(args, char *), 1);
-	else if (type == 'i')
-		returnval = ft_putnbr_fd(va_arg(args, int), 1);
-	else if (type == 'u')
-		returnval = ft_putnbru_fd(va_arg(args, int), 1);
-	else if (type == '%')
-		returnval = ft_putchar_fd('%', 1);
-	else if (type == 'x')
-		returnval = lower_hexa_printer(va_arg(args, unsigned int));
-	else if (type == 'X')
-		returnval = higher_hexa_printer(va_arg(args, unsigned int));
-	else if (type == 'p')
-		returnval = putptr((unsigned long long)va_arg(args, void *));
-	return (returnval);
+	return (type == 'c' || type == 'd' || type == 's' || type == 'i' ||
+			type == 'u' || type == '%' || type == 'x' || type == 'X' || type == 'p');
 }
+
+static int formatter(char type, va_list args)
+{
+	if (!is_format(type))
+		return 0;
+	if (type == 'c')
+		return ft_putchar_fd((char)va_arg(args, int), 1);
+	else if (type == 'd' || type == 'i')
+		return ft_putnbr_fd(va_arg(args, int), 1);
+	else if (type == 's')
+		return ft_putstr_fd(va_arg(args, char *), 1);
+	else if (type == 'u')
+		return ft_putnbru_fd(va_arg(args, unsigned int), 1);
+	else if (type == '%')
+		return ft_putchar_fd('%', 1);
+	else if (type == 'x')
+		return lower_hexa_printer(va_arg(args, unsigned int));
+	else if (type == 'X')
+		return higher_hexa_printer(va_arg(args, unsigned int));
+	else if (type == 'p')
+		return putptr((unsigned long long)va_arg(args, void *));
+	return 0;
+}
+
 
 int	ft_printf(const char *format, ...)
 {
