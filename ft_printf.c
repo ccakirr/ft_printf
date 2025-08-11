@@ -83,12 +83,16 @@ int	ft_printf(const char *format, ...)
 	va_start(args, format);
 	while (format[i])
 	{
-		if (format[i] == '%')
+		if (format[i] == '%' && is_format(format[i+1]))
 		{
 			retva = formatter(format[i + 1], args);
 			i = i + 2;
 			size += retva;
 			continue ;
+		}
+		else if(format[i] == '%')
+		{
+			i++;
 		}
 		ft_putchar_fd(format[i], 1);
 		i++;
