@@ -70,33 +70,30 @@ static int formatter(char type, va_list args)
 	return 0;
 }
 
-
 int	ft_printf(const char *format, ...)
 {
 	int		i;
 	va_list	args;
 	int		size;
-	int		retva;
 
 	i = 0;
 	size = 0;
 	va_start(args, format);
 	while (format[i])
 	{
-		if (format[i] == '%' && is_format(format[i+1]))
+		if (format[i] == '%' && is_format(format[i + 1]))
 		{
-			retva = formatter(format[i + 1], args);
-			i = i + 2;
-			size += retva;
-			continue ;
+			size += formatter(format[i + 1], args);
+			i += 2;
 		}
-		else if(format[i] == '%')
+		else
 		{
+			if (format[i] == '%')
+				i++;
+			ft_putchar_fd(format[i], 1);
 			i++;
+			size++;
 		}
-		ft_putchar_fd(format[i], 1);
-		i++;
-		size++;
 	}
 	va_end(args);
 	return (size);
